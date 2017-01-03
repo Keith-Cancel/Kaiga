@@ -24,13 +24,32 @@
 */
 
 /**
-* @file kaiga.php
+* @file image.php
 * @author  Keith Cancel <admin@keith.pro>
 * @version 1.0
 *
-* This utility library helps with working with the GD image functions, and adds
-* wrapper classes.
+* The is file contains the abstract image class.
 */
-include_once(__DIR__.'/image.php');
-// Image Types
-include_once(__DIR__.'/bmp.php');
+declare(strict_types = 1);
+namespace Kaiga;
+
+abstract class Image {
+    /// The max Image area is 16K^2
+    const MAX_AREA = 268435456;
+    final protected function __construct(){}
+    abstract public function GDResource();
+    abstract public function height();
+    abstract public function width();
+    abstract protected function loadFromFile(string $file_path);
+    abstract protected function loadFromDataString(string $data);
+    public static function newFromFile(string $file_path) {
+        $image = new static();
+        $image->loadFromFile($file_path);
+		return $image;
+	}
+	public static function newFromDataString(string $data) {
+		$image = new static();
+        $image->loadFromDataString($data);
+		return $image;
+	}
+}
